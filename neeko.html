@@ -86,8 +86,6 @@
         geom.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
         geom.computeVertexNormals();
 
-        const tex = new THREE.TextureLoader().load('https://sibsansuk.github.io/5241_Capheny2.png', t => {
-        });
         const mat = new THREE.MeshStandardMaterial({
             map: tex
         });
@@ -112,30 +110,6 @@
 
         scene.add(plane);
 
-        //basic shaer sphere
-        const sphereGeometry = new THREE.SphereGeometry(0.6, 48, 48)
-        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial)
-        sphere.position.set(2, 1, 1)
-        sphere.castShadow = true
-        scene.add(sphere)
-
-        //basic Lambert sphere
-        const lambertGeometry = new THREE.SphereGeometry(0.5, 32, 32)
-        const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0x3b82f6 })
-        const lambert = new THREE.Mesh(lambertGeometry, lambertMaterial)
-        lambert.position.set(-2, 1, 1)
-        lambert.castShadow = true
-        scene.add(lambert)
-
-        //basic Phong sphere
-        const phongGeometry = new THREE.SphereGeometry(0.5, 32, 32)
-        const phongMaterial = new THREE.MeshPhongMaterial({ color: 0xff00ff, shininess: 100 })
-        const phong = new THREE.Mesh(phongGeometry, phongMaterial)
-        phong.position.set(0, 1, 1)
-        phong.castShadow = true
-        scene.add(phong)
-
         //basic PBR sphere
         const PBRGeometry = new THREE.SphereGeometry(0.5, 32, 32)
         const PBRMaterial = new THREE.MeshStandardMaterial({ color: 0x53595D, metalness: 0. , roughness: 0.0 })
@@ -151,7 +125,7 @@
             model.traverse((child) => {
                 if (child.isMesh) {
                     child.castShadow = true;
-                    child.receiveShadow = true;
+                    child.receiveShadow = true; 
                 }
             });
             model.scale.set(3,3,3)
