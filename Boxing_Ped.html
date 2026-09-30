@@ -25,13 +25,18 @@
 
   const scene = new THREE.Scene();
 
-
-  const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
-  camera.position.set(0, 4, 8);
+  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+  camera.position.set(0, 1.8, 5.5); 
 
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.target.set(0, 1, 0);
+  controls.enableDamping = true; 
+  controls.dampingFactor = 0.05;
+  controls.target.set(0, 1.2, 0); 
+  
+  controls.enableZoom = true;
+  controls.enableRotate = true;
+  controls.enablePan = true;
+  controls.update();
 
   const exrSkyboxUrl = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/exr/1k/abandoned_workshop_1k.exr';
   const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -71,9 +76,11 @@
   scene.add(arenaSpotlight.target);
 
   let clickableTextObjects = [];
+  let mixer;
+  const clock = new THREE.Clock();
 
   const loader = new THREE.GLTFLoader();
-  loader.load('Boxing_Ped.glb', (gltf) => {
+  loader.load('Boxing_Ped909.glb', (gltf) => {
     const model = gltf.scene;
     
     model.traverse((child) => {
@@ -83,13 +90,13 @@
         if (child.material) {
           child.material.needsUpdate = true;
         }
+
         const meshName = child.name.toLowerCase();
         if (meshName.includes('text') || meshName.includes('portfolio') || meshName.includes('font') || meshName.includes('string')) {
           clickableTextObjects.push(child);
         }
       }
     });
-
 
     if (clickableTextObjects.length === 0) {
       model.traverse((child) => {
@@ -101,9 +108,18 @@
 
     model.position.set(0, 0, 0);
     scene.add(model);
-    console.log('Boxing_Ped.glb');
+
+    if (gltf.animations && gltf.animations.length > 0) {
+      mixer = new THREE.AnimationMixer(model);
+      gltf.animations.forEach((clip) => {
+        mixer.clipAction(clip).play();
+      });
+      console.log('พบและเล่น Animation จำนวน:', gltf.animations.length);
+    }
+
+    console.log('โหลดโมเดลสำเร็จ!');
   }, undefined, (err) => {
-    console.error('Boxing_Ped.glb error', err);
+    console.error('Boxing_Ped909.glb error', err);
   });
 
   const raycaster = new THREE.Raycaster();
@@ -114,7 +130,6 @@
     mouse.y = -(event.clientY / innerHeight) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
-    
     const intersects = raycaster.intersectObjects(clickableTextObjects, true);
 
     if (intersects.length > 0) {
@@ -128,6 +143,7 @@
     }
   });
 
+  
   addEventListener('resize', () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
@@ -135,13 +151,18 @@
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   });
 
- function animate() {
-    controls.update();
-    renderer.render(scene, camera);
+  
+  function animate() {
     requestAnimationFrame(animate);
+
+    const delta = clock.getDelta();
+    if (mixer) mixer.update(delta);
+
+    controls.update(); 
+    renderer.render(scene, camera);
   }
 
-  requestAnimationFrame(animate);
+  animate();
 </script>
 </body>
 </html>
