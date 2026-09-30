@@ -68,7 +68,7 @@
   scene.add(arenaSpotlight.target);
 
   const loader = new THREE.GLTFLoader();
-  loader.load('Boxing_show123.glb', (gltf) => {
+  loader.load('Boxing_Ped.glb', (gltf) => {
     const model = gltf.scene;
     
     model.traverse((child) => {
@@ -95,11 +95,12 @@
   toonMesh.name = "CelShadedObject";
   scene.add(toonMesh);
 
-  const uniforms = {
+    const uniforms = {
     uTime: { value: 0.0 }
   };
 
   const vertexShader = `
+    precision mediump float;
     uniform float uTime;
     varying vec2 vUv;
 
