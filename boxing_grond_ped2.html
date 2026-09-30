@@ -29,8 +29,7 @@
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   
-  const exrSkyboxUrl = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/exr/1k/venice_sunset_1k.exr';
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+const exrSkyboxUrl = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/exr/1k/abandoned_workshop_1k.exr';  const pmremGenerator = new THREE.PMREMGenerator(renderer);
   pmremGenerator.compileEquirectangularShader();
 
   new THREE.EXRLoader()
@@ -55,7 +54,7 @@
   scene.add(dirLight);
 
   const loader = new THREE.GLTFLoader();
-  loader.load('Boxing_show.glb', (gltf) => {
+  loader.load('Boxing_show123.glb', (gltf) => {
     const model = gltf.scene;
     scene.add(model);
   }, undefined, (err) => {
